@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+               ToolsVersion="4.0"
+               DefaultTargets="default">
+  <Import Project="..\..\.build\MSBuild.Community.Tasks.Targets" />
+  <PropertyGroup>
+    <ProjectName>Diffbot.Api.Client</ProjectName>
+    <ProjectFile>$(ProjectName).csproj</ProjectFile>
+    <BaseDir>$(MSBuildProjectDirectory)\..</BaseDir>
+    <PackageDir>$(BaseDir)\NuGet\Packages</PackageDir>
+    <NuGetApp>$(BaseDir)\..\.nuget\NuGet.exe</NuGetApp>
+  </PropertyGroup>
+
+  <Target Name="default" DependsOnTargets="StdPackage; MovePackages" />
+
+  <Target Name="StdPackage">
+    <Exec WorkingDirectory="$(BaseDir)" Command="$(NuGetApp) pack &quot;$(ProjectFile)&quot; -Verbosity detailed -Prop Configuration=Release" />
+  </Target>
+
+  <Target Name="MovePackages" Condition="Exists($(PackageDir))">
+    <Exec WorkingDirectory="$(BaseDir)" Command="move /y *.nupkg &quot;$(PackageDir)&quot;" />
+  </Target>
+
+</Project>
